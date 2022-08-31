@@ -31,3 +31,6 @@
 
 ; { a, b }
 (sequence_expression "," @op (#opfmt! 2))
+
+; { a: 1 }
+(object (pair ":" @op (#opfmt! 2)))

@@ -1,8 +1,5 @@
 ; inherits: ecma
 
-; { a: 1 }
-(object (pair ":" @op (#opfmt! 2)))
-
 ; const a: T
 (type_annotation ":" @op (#opfmt! 2))
 
@@ -18,5 +15,5 @@
 ; const a: [T, U]
 (tuple_type "," @op (#opfmt! 2))
 
-; const a: { [k: number]: v }
+; const a: { [k: T]: v }
 (index_signature ":" @op (#opfmt! 2))
