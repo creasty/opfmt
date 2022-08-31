@@ -16,6 +16,8 @@ foo += 123 * fn('abc', { bar: [4, 5] });
 
 ## Quick start
 
+Install [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
+
 ```lua
 require('nvim-treesitter.configs').setup {
   opfmt = {
@@ -34,3 +36,15 @@ require('nvim-treesitter.configs').setup {
 - lua
 - toml
 - vim
+
+## Todo
+
+- Describe motivation
+  - Make a simple movie
+  - Write down goals and non-goals
+  - Comparison with other formatters?
+- Features
+  - Merge two consecutive operators if applicable
+  - Add negative modifier
+- Bugfixes
+  - Fix a bug regarding match_case node in vim
