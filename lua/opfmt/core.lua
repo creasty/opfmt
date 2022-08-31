@@ -101,7 +101,8 @@ function M.retrive_token_info_list(bufnr, line, row, col)
       end
     end
 
-    if metadata.opfmt_space then
+    local op_node_row = op_node:start()
+    if op_node_row == row and metadata.opfmt_space then
       local info = M.build_token_info(line, op_node)
       if info then
         info.lang = lang

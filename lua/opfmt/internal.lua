@@ -35,7 +35,7 @@ end
 
 function M.format(bufnr, mode)
   local line, row, col = M.get_current_line(bufnr)
-  local info_list = core.retrive_token_info_list(bufnr, line, row, col)
+  local info_list = core.retrive_token_info_list(bufnr, line, row, col) or {}
   local formatted, new_col = core.get_formatted_line(line, col, info_list, mode)
 
   if formatted ~= line then
