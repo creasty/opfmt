@@ -33,7 +33,7 @@ local function is_supported(lang)
   return has_nested_opfmt(lang)
 end
 
-local function directive_opfmt(_match, _pattern, _bufnr, predicate, metadata)
+local function set_opfmt(_match, _pattern, _bufnr, predicate, metadata)
   metadata.opfmt_space = tonumber(predicate[2])
 end
 
@@ -47,7 +47,7 @@ function M.init()
     }
   }
 
-  vim.treesitter.query.add_directive('opfmt!', directive_opfmt)
+  vim.treesitter.query.add_directive('opfmt!', set_opfmt)
 end
 
 return M
