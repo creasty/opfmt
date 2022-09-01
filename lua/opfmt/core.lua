@@ -4,16 +4,16 @@ local ts_utils = require 'nvim-treesitter.ts_utils'
 
 local M = {}
 
-function M.get_space_count(mode)
-  if mode == 3 then
+function M.get_space_count(mod)
+  if mod == 3 then
     return 2
-  elseif mode > 0 then
+  elseif mod > 0 then
     return 1
   end
   return 0
 end
 
-function M.get_space_mode(left, right)
+function M.get_space_mod(left, right)
   if left and right then
     return 3
   elseif right then
@@ -24,11 +24,11 @@ function M.get_space_mode(left, right)
   return 0
 end
 
-function M.format_space(token, mode)
-  if mode == 1 or mode == 3 then
+function M.format_space(token, mod)
+  if mod == 1 or mod == 3 then
     token = ' ' .. token
   end
-  if mode == 2 or mode == 3 then
+  if mod == 2 or mod == 3 then
     token = token .. ' '
   end
   return token
@@ -128,7 +128,7 @@ function M.build_token_info(line, node)
     token = token,
     col_start = col1,
     col_end = col2,
-    space = M.get_space_mode(sp_left, sp_right),
+    space = M.get_space_mod(sp_left, sp_right),
   }
 end
 
