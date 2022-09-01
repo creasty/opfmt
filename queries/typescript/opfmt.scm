@@ -1,5 +1,8 @@
 ; inherits: ecma
 
+; (a = 1) => a
+(required_parameter "=" @op (#opfmt! @op 3))
+
 ; const a: T
 (type_annotation ":" @op (#opfmt! @op 2))
 

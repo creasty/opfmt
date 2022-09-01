@@ -14,9 +14,6 @@
 ; a += 1
 (augmented_assignment_expression _ @op (#lua-match? @op "=") (#opfmt! @op 3))
 
-; (a = 1) => a
-(required_parameter "=" @op (#opfmt! @op 3))
-
 ; () => a
 (arrow_function "=>" @op (#opfmt! @op 3))
 
