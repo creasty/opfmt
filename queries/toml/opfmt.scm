@@ -1,2 +1,2 @@
 ; a = 1
-(table_array_element (pair "=" @op (#opfmt! 3)))
+(table_array_element (pair "=" @op (#opfmt! @op 3)))

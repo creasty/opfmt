@@ -33,8 +33,9 @@ local function is_supported(lang)
   return has_nested_opfmt(lang)
 end
 
-local function set_opfmt(_match, _pattern, _bufnr, predicate, metadata)
-  metadata.opfmt_space = tonumber(predicate[2])
+local function set_opfmt(match, _pattern, _bufnr, predicate, metadata)
+  metadata.opfmt_node = match[predicate[2]]
+  metadata.opfmt_space = tonumber(predicate[3])
 end
 
 function M.init()

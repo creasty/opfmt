@@ -1,36 +1,36 @@
 ; a + b
-(binary_expression operator: _ @op (#opfmt! 3))
+(binary_expression operator: _ @op (#opfmt! @op 3))
 
 ; a ? b : c
-(ternary_expression ["?" ":"] @op (#opfmt! 3))
+(ternary_expression ["?" ":"] @op (#opfmt! @op 3))
 
 ; let a = 1
 ; const a = 1
-(variable_declarator "=" @op (#opfmt! 3))
+(variable_declarator "=" @op (#opfmt! @op 3))
 
 ; a = 1
-(assignment_expression "=" @op (#opfmt! 3))
+(assignment_expression "=" @op (#opfmt! @op 3))
 
 ; a += 1
-(augmented_assignment_expression _ @op (#lua-match? @op "=") (#opfmt! 3))
+(augmented_assignment_expression _ @op (#lua-match? @op "=") (#opfmt! @op 3))
 
 ; (a = 1) => a
-(required_parameter "=" @op (#opfmt! 3))
+(required_parameter "=" @op (#opfmt! @op 3))
 
 ; () => a
-(arrow_function "=>" @op (#opfmt! 3))
+(arrow_function "=>" @op (#opfmt! @op 3))
 
 ; (a, b) => a
-(formal_parameters "," @op (#opfmt! 2))
+(formal_parameters "," @op (#opfmt! @op 2))
 
 ; f(a, b)
-(arguments "," @op (#opfmt! 2))
+(arguments "," @op (#opfmt! @op 2))
 
 ; [a, b]
-(array "," @op (#opfmt! 2))
+(array "," @op (#opfmt! @op 2))
 
 ; { a, b }
-(sequence_expression "," @op (#opfmt! 2))
+(sequence_expression "," @op (#opfmt! @op 2))
 
 ; { a: 1 }
-(object (pair ":" @op (#opfmt! 2)))
+(object (pair ":" @op (#opfmt! @op 2)))

@@ -68,7 +68,6 @@ function M.retrive_token_info_list(bufnr, line, row, col)
   if not lang then
     return
   end
-
   if not parsers.has_parser(lang) then
     return
   end
@@ -92,18 +91,10 @@ function M.retrive_token_info_list(bufnr, line, row, col)
   local range = { root:range() }
   local info_list = {}
 
-  for _, match, metadata in query:iter_matches(root, bufnr, range[1], range[3] + 1) do
-    local op_node
-    for id, node in pairs(match) do
-      if query.captures[id] == 'op' then
-        op_node = node
-        break
-      end
-    end
-
-    local op_node_row = op_node:start()
+  for _, _, metadata in query:iter_matches(root, bufnr, range[1], range[3] + 1) do
+    local op_node_row = metadata.opfmt_node:start()
     if op_node_row == row and metadata.opfmt_space then
-      local info = M.build_token_info(line, op_node)
+      local info = M.build_token_info(line, metadata.opfmt_node)
       if info then
         info.lang = lang
         info.space_old = info.space
