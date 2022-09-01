@@ -13,20 +13,20 @@ end
 
 function M.debug(bufnr)
   local line, row, col = M.get_current_line(bufnr)
-  local info_list = core.retrive_token_info_list(bufnr, line, row, col) or {}
-  local formatted = core.get_formatted_line(line, col, info_list, 'line')
+  local tokens = core.find_tokens(bufnr, line, row, col) or {}
+  local formatted = core.get_formatted_line(line, col, tokens, 'line')
 
   local lines = {'--[[', formatted, '--]]'}
-  for _, info in ipairs(info_list) do
+  for _, token in ipairs(tokens) do
     table.insert(lines, table.concat({
       '{ ',
-      vim.inspect(info.token),
+      vim.inspect(token.text),
       ', ',
-      (info.space_old and info.space_old .. ' -> ' or ''),
-      info.space,
+      (token.space_old and token.space_old .. ' -> ' or ''),
+      token.space,
       ' }',
       ' -- ',
-      info.col_start, ', ', info.col_end,
+      token.col_start, ', ', token.col_end,
     }, ''))
   end
 
@@ -35,8 +35,8 @@ end
 
 function M.format(bufnr, mode)
   local line, row, col = M.get_current_line(bufnr)
-  local info_list = core.retrive_token_info_list(bufnr, line, row, col) or {}
-  local formatted, new_col = core.get_formatted_line(line, col, info_list, mode)
+  local tokens = core.find_tokens(bufnr, line, row, col) or {}
+  local formatted, new_col = core.get_formatted_line(line, col, tokens, mode)
 
   if formatted ~= line then
     vim.api.nvim_buf_set_lines(bufnr, row, row + 1, true, {formatted})

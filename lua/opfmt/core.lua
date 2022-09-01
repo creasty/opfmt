@@ -24,42 +24,17 @@ function M.get_space_mod(left, right)
   return 0
 end
 
-function M.format_space(token, mod)
+function M.format_space(text, mod)
   if mod == 1 or mod == 3 then
-    token = ' ' .. token
+    text = ' ' .. text
   end
   if mod == 2 or mod == 3 then
-    token = token .. ' '
+    text = text .. ' '
   end
-  return token
+  return text
 end
 
-function M.match_patterns(str, patterns)
-  if #patterns == 0 then
-    return true
-  end
-  for _, pattern in ipairs(patterns) do
-    if str:match(pattern) then
-      return true
-    end
-  end
-  return false
-end
-
-function M.match_rule(info, rule)
-  if rule.tokens and not M.match_patterns(info.token, rule.tokens) then
-    return false
-  end
-  if rule.ignore_paths and M.match_patterns(info.path, rule.ignore_paths) then
-    return false
-  end
-  if rule.paths and not M.match_patterns(info.path, rule.paths) then
-    return false
-  end
-  return true
-end
-
-function M.retrive_token_info_list(bufnr, line, row, col)
+function M.find_tokens(bufnr, line, row, col)
   if bufnr == 0 then
     bufnr = vim.api.nvim_get_current_buf()
   end
@@ -89,31 +64,31 @@ function M.retrive_token_info_list(bufnr, line, row, col)
   end
 
   local range = { root:range() }
-  local info_list = {}
+  local tokens = {}
 
   for _, _, metadata in query:iter_matches(root, bufnr, range[1], range[3] + 1) do
     local op_node_row = metadata.opfmt_node:start()
     if op_node_row == row and metadata.opfmt_space then
-      local info = M.build_token_info(line, metadata.opfmt_node)
-      if info then
-        info.lang = lang
-        info.space_old = info.space
-        info.space = metadata.opfmt_space
-        table.insert(info_list, info)
+      local token = M.build_token(line, metadata.opfmt_node)
+      if token then
+        token.lang = lang
+        token.space_old = token.space
+        token.space = metadata.opfmt_space
+        table.insert(tokens, token)
       end
     end
   end
 
-  return info_list
+  return tokens
 end
 
-function M.build_token_info(line, node)
+function M.build_token(line, node)
   local row1, col1, row2, col2 = node:range()
   if row1 ~= row2 then
     return
   end
 
-  local token = string.sub(line, col1 + 1, col2)
+  local text = string.sub(line, col1 + 1, col2)
 
   local sp_left = string.sub(line, col1, col1) == ' '
   if sp_left then
@@ -125,25 +100,25 @@ function M.build_token_info(line, node)
   end
 
   return {
-    token = token,
+    text = text,
     col_start = col1,
     col_end = col2,
     space = M.get_space_mod(sp_left, sp_right),
   }
 end
 
-function M.get_formatted_line(line, col, info_list, mode)
+function M.get_formatted_line(line, col, tokens, mode)
   local formatted = line
 
-  for i = #info_list, 1, -1 do
-    local info = info_list[i]
+  for i = #tokens, 1, -1 do
+    local token = tokens[i]
 
     if mode == 'around' then
-      if math.min(math.abs(info.col_start - col), math.abs(info.col_end - col)) > 1 then
+      if math.min(math.abs(token.col_start - col), math.abs(token.col_end - col)) > 1 then
         goto continue
       end
     elseif mode == 'before' then
-      if col <= info.col_start or col - info.col_end > 1 then
+      if col <= token.col_start or col - token.col_end > 1 then
         goto continue
       end
     elseif mode == 'line' then
@@ -152,12 +127,12 @@ function M.get_formatted_line(line, col, info_list, mode)
       goto continue
     end
 
-    local token = M.format_space(info.token, info.space)
-    if info.space_old and info.col_end <= col then
-      local shift = M.get_space_count(info.space) - M.get_space_count(info.space_old)
+    local text = M.format_space(token.text, token.space)
+    if token.space_old and token.col_end <= col then
+      local shift = M.get_space_count(token.space) - M.get_space_count(token.space_old)
       col = col + shift
     end
-    formatted = string.sub(formatted, 0, info.col_start) .. token .. string.sub(formatted, info.col_end + 1)
+    formatted = string.sub(formatted, 0, token.col_start) .. text .. string.sub(formatted, token.col_end + 1)
 
     ::continue::
   end

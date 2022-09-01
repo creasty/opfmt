@@ -39,7 +39,7 @@ local function set_opfmt(match, _pattern, _bufnr, predicate, metadata)
 end
 
 function M.init()
-  require 'nvim-treesitter'.define_modules {
+  require('nvim-treesitter').define_modules {
     opfmt = {
       module_path = 'opfmt.internal',
       enable = false,
