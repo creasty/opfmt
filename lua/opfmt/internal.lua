@@ -27,6 +27,7 @@ function M.debug(bufnr)
       ' }',
       ' -- ',
       token.col_start, ', ', token.col_end,
+      (token.ignored and '  ' .. token.ignored or ''),
     }, ''))
   end
 
@@ -117,7 +118,7 @@ function M.attach(bufnr, lang)
         if vim.api.nvim_get_mode().mode ~= 'i' then return end
         if state.skip then return end
         if not M.verify_tick() then return end
-        M.format(bufnr, 'before')
+        M.format(bufnr, 'line')
       end)()
     end,
   }

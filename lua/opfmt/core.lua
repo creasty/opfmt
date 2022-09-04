@@ -82,8 +82,18 @@ function M.find_tokens(bufnr, line, row, col)
   return tokens
 end
 
-function M.build_token(line, node)
+function M.node_normalized_range(node, eol)
   local row1, col1, row2, col2 = node:range()
+  if row2 == row1 + 1 and col2 == 0 then
+    row2 = row1
+    col2 = eol
+  end
+  return row1, col1, row2, col2
+end
+
+function M.build_token(line, node)
+  local eol = string.len(line)
+  local row1, col1, row2, col2 = M.node_normalized_range(node, eol)
   if row1 ~= row2 then
     return
   end
@@ -99,11 +109,25 @@ function M.build_token(line, node)
     col2 = col2 + 1
   end
 
+  local ignored = false
+  local parent = node:parent()
+  if parent then
+    if parent:has_error() then
+      ignored = 'parent_error'
+    else
+      local p_row1, _, p_row2, _ = M.node_normalized_range(parent)
+      if not (row1 == p_row1 and p_row1 == p_row2) then
+        ignored = 'multiline'
+      end
+    end
+  end
+
   return {
     text = text,
     col_start = col1,
     col_end = col2,
     space = M.get_space_mod(sp_left, sp_right),
+    ignored = ignored,
   }
 end
 
@@ -112,6 +136,10 @@ function M.get_formatted_line(line, col, tokens, mode)
 
   for i = #tokens, 1, -1 do
     local token = tokens[i]
+
+    if token.ignored then
+      goto continue
+    end
 
     if mode == 'around' then
       if math.min(math.abs(token.col_start - col), math.abs(token.col_end - col)) > 1 then
