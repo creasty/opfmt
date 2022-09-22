@@ -36,6 +36,7 @@ require('nvim-treesitter.configs').setup {
 - lua
 - toml
 - vim
+- proto
 
 ## Todo
 
