@@ -76,6 +76,7 @@ function M.add_key_observer()
 
   local key_bs = vim.api.nvim_replace_termcodes('<BS>', true, false, true)
   local key_del = vim.api.nvim_replace_termcodes('<Del>', true, false, true)
+  local key_sp = vim.api.nvim_replace_termcodes('<Space>', true, false, true)
 
   state.key_observer_id = vim.on_key(function (key)
     if vim.api.nvim_get_mode().mode ~= 'i' then
@@ -85,7 +86,7 @@ function M.add_key_observer()
 
     state.tick = M.get_tick()
 
-    if key == key_bs or key == key_del then
+    if key == key_bs or key == key_del or key == key_sp then
       state.skip = true
     else
       state.skip = false

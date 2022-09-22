@@ -115,10 +115,10 @@ function M.build_token(line, node)
     if parent:has_error() then
       ignored = 'parent_error'
     else
-      local p_row1, _, p_row2, _ = M.node_normalized_range(parent)
-      if not (row1 == p_row1 and p_row1 == p_row2) then
-        ignored = 'multiline'
-      end
+      -- local p_row1, _, p_row2, _ = M.node_normalized_range(parent)
+      -- if not (row1 == p_row1 and p_row1 == p_row2) then
+      --   ignored = 'multiline'
+      -- end
     end
   end
 
