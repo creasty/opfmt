@@ -155,6 +155,15 @@ function M.get_formatted_line(line, col, tokens, mode)
       goto continue
     end
 
+    -- Avoid trailing spaces
+    if token.col_end == #line then
+      if token.space == 2 then
+        token.space = 0
+      elseif token.space == 3 then
+        token.space = 1
+      end
+    end
+
     local text = M.format_space(token.text, token.space)
     if token.space_old and token.col_end <= col then
       local shift = M.get_space_count(token.space) - M.get_space_count(token.space_old)
