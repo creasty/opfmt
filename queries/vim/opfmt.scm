@@ -18,8 +18,11 @@
 ; let a = { 'b': 1, 'c': 2 }
 (dictionnary "," @op (#opfmt! @op 2))
 
+; let a = { 'b': 1 }
+(dictionnary_entry ":" @op (#opfmt! @op 2))
+
 ; call fn(1, 2)
 (call_expression "," @op (#opfmt! @op 2))
 
-; let a = { 'b': 1 }
-(dictionnary_entry ":" @op (#opfmt! @op 2))
+; function! s:aaa(a,b) | endfunction
+(function_declaration parameters: (parameters "," @op (#opfmt! @op 2)))

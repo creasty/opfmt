@@ -36,8 +36,9 @@
 ; (object @parent "}" @op (#opfmt! @op 1) (#has-named-child? @parent))
 
 ; import { a, b } from "c";
-(named_imports "{" @op (#opfmt! @op 1))
+(named_imports "{" @op (#opfmt! @op 3))
 (named_imports "," @op (#opfmt! @op 2))
+(named_imports "}" @op (#opfmt! @op 3))
 
 ; export { a, b };
 (export_clause "{" @op (#opfmt! @op 1))
@@ -62,4 +63,4 @@
 (switch_statement value: (parenthesized_expression ")" @op (#opfmt! @op 2)))
 
 ; function a() {}
-(function_declaration parameters: (formal_parameters ")" @op (#opfmt! @op 2)))
+(function_declaration body: (statement_block "{" @op (#opfmt! @op 1)))
