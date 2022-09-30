@@ -63,4 +63,7 @@
 (switch_statement value: (parenthesized_expression ")" @op (#opfmt! @op 2)))
 
 ; function a() {}
-(function_declaration body: (statement_block "{" @op (#opfmt! @op 1)))
+(function_declaration body: (statement_block "{" @op (#opfmt! @op 3)))
+
+; class A { a() {} }
+(method_definition body: (statement_block "{" @op (#opfmt! @op 3)))
