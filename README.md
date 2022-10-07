@@ -45,7 +45,7 @@ require('nvim-treesitter.configs').setup {
   - Write down goals and non-goals
   - Comparison with other formatters?
 - Features
-  - Merge two consecutive operators if applicable
-  - Add negative modifier
+  - [x] Merge two consecutive operators if applicable
+  - [ ] Support has_child? query
 - Bugfixes
   - Fix a bug regarding match_case node in vim
