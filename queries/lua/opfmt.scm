@@ -4,6 +4,9 @@
 ; local a = 1
 (assignment_statement "=" @op (#opfmt! @op 3))
 
+; locl a, b = x
+(variable_list "," @op (#opfmt! @op 2))
+
 ; local a = { k = 1 }
 (table_constructor (field "=" @op (#opfmt! @op 3)))
 
@@ -17,3 +20,9 @@
 ; for i = 0, 10 do end
 (for_numeric_clause "=" @op (#opfmt! @op 3))
 (for_numeric_clause "," @op (#opfmt! @op 2))
+
+; function fn(a, b) end
+(parameters "," @op (#opfmt! @op 2))
+
+; return a, b
+(expression_list "," @op (#opfmt! @op 2))

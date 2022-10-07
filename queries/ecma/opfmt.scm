@@ -63,7 +63,7 @@
 (switch_statement value: (parenthesized_expression ")" @op (#opfmt! @op 2)))
 
 ; function a() {}
-(function_declaration body: (statement_block "{" @op (#opfmt! @op 3)))
+(function_declaration parameters: (formal_parameters ")" @op (#opfmt! @op 2)))
 
 ; class A { a() {} }
-(method_definition body: (statement_block "{" @op (#opfmt! @op 3)))
+(method_definition parameters: (formal_parameters ")" @op (#opfmt! @op 2)))
