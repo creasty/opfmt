@@ -126,7 +126,10 @@ function M.get_formatted_line(line, col, tokens, mode)
       goto continue
     end
 
-    if token.col_end == #line then
+    if token.col_start == 1 then
+      -- Avoid leading spaces
+      token.space = space_mod.sub(token.space, 1)
+    elseif token.col_end == #line then
       -- Avoid trailing spaces
       token.space = space_mod.sub(token.space, 2)
     end
