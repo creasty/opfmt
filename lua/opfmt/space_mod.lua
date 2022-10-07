@@ -17,13 +17,13 @@ function M.unpack(mod)
   return left, right
 end
 
-function M.space_mod_sub(a, b)
+function M.sub(a, b)
   local al, ar = M.unpack(a)
   local bl, br = M.unpack(b)
   return M.pack(al and bl, ar and br)
 end
 
-function M.space_mod_add(a, b)
+function M.add(a, b)
   local al, ar = M.unpack(a)
   local bl, br = M.unpack(b)
   return M.pack(al or bl, ar or br)
@@ -32,7 +32,7 @@ end
 function M.count(mod)
   local l, r = M.unpack(mod)
   if l and r then
-    return 3
+    return 2
   elseif l or r then
     return 1
   end

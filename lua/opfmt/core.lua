@@ -42,9 +42,8 @@ function M.find_tokens(bufnr, line, row, col)
     if op_node_row == row and metadata.opfmt_space then
       local token = M.build_token(line, metadata.opfmt_node)
       if token then
-        token.lang = lang
         token.space_old = token.space
-        token.space = metadata.opfmt_space
+        token.space = space_mod.add(token.space, metadata.opfmt_space)
         table.insert(tokens, token)
       end
     end
@@ -71,12 +70,12 @@ function M.build_token(line, node)
 
   local text = string.sub(line, col1 + 1, col2)
 
-  local sp_left = string.sub(line, col1, col1) == ' '
-  if sp_left then
+  local sp_l = string.sub(line, col1, col1) == ' '
+  if sp_l then
     col1 = col1 - 1
   end
-  local sp_right = string.sub(line, col2 + 1, col2 + 1) == ' '
-  if sp_right then
+  local sp_r = string.sub(line, col2 + 1, col2 + 1) == ' '
+  if sp_r then
     col2 = col2 + 1
   end
 
@@ -85,11 +84,6 @@ function M.build_token(line, node)
   if parent then
     if parent:has_error() then
       ignored = 'parent_error'
-    else
-      -- local p_row1, _, p_row2, _ = M.node_normalized_range(parent)
-      -- if not (row1 == p_row1 and p_row1 == p_row2) then
-      --   ignored = 'multiline'
-      -- end
     end
   end
 
@@ -97,7 +91,7 @@ function M.build_token(line, node)
     text = text,
     col_start = col1,
     col_end = col2,
-    space = space_mod.pack(sp_left, sp_right),
+    space = space_mod.pack(sp_l, sp_r),
     ignored = ignored,
   }
 end
@@ -126,13 +120,23 @@ function M.get_formatted_line(line, col, tokens, mode)
       goto continue
     end
 
+    local sp_l, sp_r = space_mod.unpack(token.space)
+
     if token.col_start == 1 then
       -- Avoid leading spaces
-      token.space = space_mod.sub(token.space, 1)
+      sp_l = false
     elseif token.col_end == #line then
       -- Avoid trailing spaces
-      token.space = space_mod.sub(token.space, 2)
+      sp_r = false
     end
+
+    local prev_token = tokens[i + 1]
+    if prev_token and prev_token.col_start == token.col_end then
+      local l, _ = space_mod.unpack(prev_token.space)
+      sp_r = sp_r and (not l)
+    end
+
+    token.space = space_mod.pack(sp_l, sp_r)
 
     local text = space_mod.format(token.text, token.space)
     if token.space_old and token.col_end <= col then
