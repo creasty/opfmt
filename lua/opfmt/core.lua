@@ -1,38 +1,9 @@
 local queries = require 'nvim-treesitter.query'
 local parsers = require 'nvim-treesitter.parsers'
 local ts_utils = require 'nvim-treesitter.ts_utils'
+local space_mod = require 'opfmt.space_mod'
 
 local M = {}
-
-function M.get_space_count(mod)
-  if mod == 3 then
-    return 2
-  elseif mod > 0 then
-    return 1
-  end
-  return 0
-end
-
-function M.get_space_mod(left, right)
-  if left and right then
-    return 3
-  elseif right then
-    return 2
-  elseif left then
-    return 1
-  end
-  return 0
-end
-
-function M.format_space(text, mod)
-  if mod == 1 or mod == 3 then
-    text = ' ' .. text
-  end
-  if mod == 2 or mod == 3 then
-    text = text .. ' '
-  end
-  return text
-end
 
 function M.find_tokens(bufnr, line, row, col)
   if bufnr == 0 then
@@ -126,7 +97,7 @@ function M.build_token(line, node)
     text = text,
     col_start = col1,
     col_end = col2,
-    space = M.get_space_mod(sp_left, sp_right),
+    space = space_mod.pack(sp_left, sp_right),
     ignored = ignored,
   }
 end
@@ -155,18 +126,14 @@ function M.get_formatted_line(line, col, tokens, mode)
       goto continue
     end
 
-    -- Avoid trailing spaces
     if token.col_end == #line then
-      if token.space == 2 then
-        token.space = 0
-      elseif token.space == 3 then
-        token.space = 1
-      end
+      -- Avoid trailing spaces
+      token.space = space_mod.sub(token.space, 2)
     end
 
-    local text = M.format_space(token.text, token.space)
+    local text = space_mod.format(token.text, token.space)
     if token.space_old and token.col_end <= col then
-      local shift = M.get_space_count(token.space) - M.get_space_count(token.space_old)
+      local shift = space_mod.count(token.space) - space_mod.count(token.space_old)
       col = col + shift
     end
     formatted = string.sub(formatted, 0, token.col_start) .. text .. string.sub(formatted, token.col_end + 1)
