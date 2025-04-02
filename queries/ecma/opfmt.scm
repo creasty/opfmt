@@ -46,7 +46,7 @@
 
 ; for (let i = 0; i < 10; i++);
 (for_statement initializer: (lexical_declaration ";" @op (#opfmt! @op 2)))
-(for_statement condition: (expression_statement ";" @op (#opfmt! @op 2)))
+(for_statement condition: ";" @op (#opfmt! @op 2))
 (for_statement "(" @op (#opfmt! @op 1))
 (for_statement ")" @op (#opfmt! @op 2))
 

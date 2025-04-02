@@ -1,4 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
-  "diagnostics.disable": ["unused-local"]
+  "diagnostics.disable": ["unused-local"],
+    "workspace.library": [
+        "/opt/homebrew/share/nvim/runtime/lua",
+        "/Users/creasty/.config/nvim/dein/repos/github.com/folke/lua-dev.nvim/types",
+        "${3rd}/luv/library"
+    ]
 }
